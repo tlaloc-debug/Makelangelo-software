@@ -545,7 +545,13 @@ It pairs really well with Marlin-polargraph, the code in the brain of the robot 
 			<version>1.0.21</version>
 			<scope>compile</scope>
 		</dependency>
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+	</dependencies>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
