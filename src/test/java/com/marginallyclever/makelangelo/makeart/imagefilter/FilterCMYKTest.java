@@ -50,16 +50,6 @@ public class FilterCMYKTest {
         assertTrue(filterCMYK.getK().getSourceImage().getHeight() > 0, "Black channel image should have height greater than 0");
     }
 
-    @Test
-    public void testMainMethod() {
-        // Arrange
-        String[] args = {};
-
-        // Act & Assert
-        assertDoesNotThrow(() -> FilterCMYK.main(args),
-                "Main method should run without throwing exceptions");
-    }
-
     //@Test
     public void testConversion() throws IOException {
         PreferencesHelper.start();

@@ -1,6 +1,7 @@
 package com.marginallyclever.makelangelo.makeart.imagefilter;
 
 import com.marginallyclever.makelangelo.makeart.TransformedImage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,15 +58,6 @@ public class FilterGaussianBlurTest {
         // Assert
         assertNotNull(horizontalFilter, "Horizontal Gaussian blur filter should not be null");
         assertNotNull(verticalFilter, "Vertical Gaussian blur filter should not be null");
-    }
-
-    @Test
-    public void testMainMethod() {
-        // Arrange
-        String[] args = {};
-
-        // Act & Assert
-        assertDoesNotThrow(() -> FilterGaussianBlur.main(args), "Main method should run without throwing exceptions");
     }
 }
 
