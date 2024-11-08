@@ -24,7 +24,9 @@ jobs:
         jvm_flag:
           - "-XX:+UseG1GC"
           - "-XX:+UnlockDiagnosticVMOptions"
+          - "-XX:+PrintFlagsFinal"
           - "-XX:+PrintCompilation"
+          - "-XX:+ExtendedDTraceProbes"
 
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +35,17 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin' 
+          distribution: 'temurin'
+
+      - name: Retrieve JVM Flags
+        run: |
+          java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version > flags.md
+
+      - name: Upload JVM Flags file
+        uses: actions/upload-artifact@v3
+        with:
+          name: JVM_Flags
+          path: flags.md
 
       - name: Run tests with JVM flag
         env:
@@ -41,3 +53,4 @@ jobs:
         run: |
           echo "Running with JVM flag: ${{ matrix.jvm_flag }}"
           mvn clean test
+
