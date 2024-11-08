@@ -16,9 +16,7 @@ jobs:
         jvm_flag:
           - "-XX:+UseG1GC"
           - "-XX:+UnlockDiagnosticVMOptions"
-          - "-XX:+AggressiveOpts"
           - "-XX:+PrintCompilation"
-          - "-XX:+ExtendedDTraceProbes"
 
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +25,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+        distribution: 'temurin' 
 
       - name: Run tests with JVM flag
         env:
