@@ -36,3 +36,18 @@ jobs:
         else
           echo "New coverage: $coverage%. Coverage is improved!"
         fi
+        
+    - name: Run build with MaxRAM flag
+      run: |
+        export MAVEN_OPTS="-XX:MaxRAM=2g"  # Set MaxRAM flag
+        mvn clean install  # Run Maven build
+        
+    # Check if the compilation was successful with 2GB RAM
+    - name: Check if build was successful with 2GB RAM
+      if: success()  
+      run: echo "The build with 2GB RAM was successful."
+
+    # Check error
+    - name: Handle failure
+      if: failure()  
+      run: echo "Build with 2GB RAM failed."
