@@ -89,53 +89,15 @@ jobs:
     - name: Run build with 1024M Cache flag
       run: |
         export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=1024M"
-        mvn clean install
-          
-    # Check if the first build was successful
-    - name: Check if build was successful with 128M Words
-      id: check_build_1
-      if: success()  
-      run: echo "The build with 128 Words was successful."
-
-    # Handling failure on first build
-    - name: Handle failure for 128 Words
-      if: failure()  
-      run: echo "Build with 128 Words failed."
-      continue-on-error: true
+        mvn clean install > result_build_1.txt 2>&1  
 
     # Second run with 64M Words (half)
     - name: Run build with 64M Words flag
       run: |
         export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=512M"
-        mvn clean install
+        mvn clean install > result_build_2.txt 2>&1  
 
-    # Check if the second build was successful
-    - name: Check if build was successful with 64M Words
-      id: check_build_2
-      if: success()  
-      run: echo "The build with 64M Words was successful."
-
-    # Handling failure on second build
-    - name: Handle failure for 64M Words
-      if: failure()  
-      run: echo "Build with 64M Words failed."
-      continue-on-error: true
-
-    # Evaluate overall success with debugging
-    - name: Print check_build_1 outcome
-      # run: echo "check_build_1 outcome:"
-      run: echo "${{ steps.check_build_1.outcome }}"
-    
-    - name: Print check_build_2 outcome
-      run: echo "${{ steps.check_build_2.outcome }}"
-
-    # Evaluate overall success
-    - name: Evaluate overall success
+    - name: Check build results and print conclusion
       run: |
-        if [[ "${{ steps.check_build_1.outcome }}" == "success" ]] && [[ "${{ steps.check_build_2.outcome }}" == "success" ]]; then
-          echo "It is very likely that the software will run on both architectures."
-        elif [[ "${{ steps.check_build_1.outcome }}" == "failure" ]] && [[ "${{ steps.check_build_2.outcome }}" == "failure" ]]; then
-          echo "Both builds failed. Try to increase the number of words for 64-bit architecture"
-        else
-          echo "It is very likely that the software will only run on 64-bit architectures."
-        fi
+        chmod +x check_results.sh  
+        ./check_results.sh         
