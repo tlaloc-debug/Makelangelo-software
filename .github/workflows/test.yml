@@ -101,6 +101,7 @@ jobs:
     - name: Handle failure for 128 Words
       if: failure()  
       run: echo "Build with 128 Words failed."
+      continue-on-error: true
 
     # Second run with 64M Words (half)
     - name: Run build with 64M Words flag
@@ -118,6 +119,7 @@ jobs:
     - name: Handle failure for 64M Words
       if: failure()  
       run: echo "Build with 64M Words failed."
+      continue-on-error: true
 
     # Evaluate overall success with debugging
     - name: Print check_build_1 outcome
