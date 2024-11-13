@@ -52,6 +52,11 @@ jobs:
     #   if: failure()  
     #   run: echo "Build with 2GB RAM failed."
 
+    - name: Obtener directorio de trabajo
+      run: |
+        current_directory=$(pwd)
+        echo "El directorio de trabajo actual es: $current_directory"
+
     - name: flag
       run: |
         export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  # Set MaxRAM flag
