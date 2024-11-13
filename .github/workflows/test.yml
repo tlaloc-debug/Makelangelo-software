@@ -69,7 +69,7 @@ jobs:
 
     - name: Run build with Cahce flag
       run: |
-        export MAVEN_OPTS="-XX:ReservedCodeCacheSize=3m"  # Set MaxRAM flag
+        export MAVEN_OPTS="-XX:ReservedCodeCacheSize=3000m"  # Set MaxRAM flag
         mvn clean install  # Run Maven build
             
         # Check if the compilation was successful with 2GB RAM
