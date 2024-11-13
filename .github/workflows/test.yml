@@ -64,5 +64,5 @@ jobs:
 
     - name: Ejecutar script de Bash para obtener GC Info
       run: |
-        chmod +x search_gc_info.sh
+        chmod +x ./search_gc_info.sh
         ./search_gc_info.sh
