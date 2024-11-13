@@ -119,6 +119,14 @@ jobs:
       if: failure()  
       run: echo "Build with 64M Words failed."
 
+    # Evaluate overall success with debugging
+    - name: Print check_build_1 outcome
+      # run: echo "check_build_1 outcome:"
+      run: echo "${{ steps.check_build_1.outcome }}"
+    
+    - name: Print check_build_2 outcome
+      run: echo "${{ steps.check_build_2.outcome }}"
+
     # Evaluate overall success
     - name: Evaluate overall success
       run: |
