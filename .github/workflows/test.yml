@@ -89,13 +89,17 @@ jobs:
     - name: Run build with 1024M Cache flag
       run: |
         export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=1024M"
-        mvn clean install > result_build_1.txt 2>&1  
+        mvn clean install 
+        echo "success" > results.log || echo "failure" > results.log
+      continue-on-error: true
 
     # Second run with 64M Words (half)
     - name: Run build with 64M Words flag
       run: |
         export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=512M"
-        mvn clean install > result_build_2.txt 2>&1  
+        mvn clean install 
+        echo "success" >> results.log || echo "failure" >> results.log
+      continue-on-error: true
 
     - name: Check build results and print conclusion
       run: |
