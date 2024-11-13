@@ -58,7 +58,7 @@ jobs:
           
     # - name: flag
     #   run: |
-    #     export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  # Set MaxRAM flag
+    #     export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  
     #     mvn clean install  # Run Maven build
 
     # - name: Ejecutar script de Bash para obtener GC Info
@@ -70,25 +70,25 @@ jobs:
           
     # - name: Run build with Cahce flag
     #   run: |
-    #     export MAVEN_OPTS="-XX:ReservedCodeCacheSize=1024M"  # Set MaxRAM flag
+    #     export MAVEN_OPTS="-XX:ReservedCodeCacheSize=1024M"  
     #     mvn clean install  # Run Maven build
             
-    # # Check if the compilation was successful with 2GB RAM
-    # - name: Check if build was successful with 2GB RAM
+    # # Check if the compilation was successful with 1024M Cache
+    # - name: Check if build was successful with 1024M Cache
     #   if: success()  
-    #   run: echo "The build with 2GB RAM was successful."
+    #   run: echo "The build with 1024M Cache was successful."
 
     # # Check error
     # - name: Handle failure
     #   if: failure()  
-    #   run: echo "Build with 2GB RAM failed."
+    #   run: echo "Build with 1024M Cache failed."
 
           ### 64 vs 32 bits
     
-    # Primera ejecución con 1024M de tamaño de caché
+    # First run with 1024M cache size
     - name: Run build with 1024M Cache flag
       run: |
-        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=128M"
+        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=1024M"
         mvn clean install
           
     # Check if the first build was successful
@@ -105,7 +105,7 @@ jobs:
     # Second run with 64M Words (half)
     - name: Run build with 64M Words flag
       run: |
-        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=64M"
+        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=512M"
         mvn clean install
 
     # Check if the second build was successful
