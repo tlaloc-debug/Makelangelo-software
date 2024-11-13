@@ -36,7 +36,9 @@ jobs:
     #     else
     #       echo "New coverage: $coverage%. Coverage is improved!"
     #     fi
-        
+
+          ### RAM TEST    
+          
     # - name: Run build with MaxRAM flag
     #   run: |
     #     export MAVEN_OPTS="-XX:MaxRAM=2g"  # Set MaxRAM flag
@@ -52,11 +54,8 @@ jobs:
     #   if: failure()  
     #   run: echo "Build with 2GB RAM failed."
 
-    # - name: Obtener directorio de trabajo
-    #   run: |
-    #     current_directory=$(pwd)
-    #     echo "El directorio de trabajo actual es: $current_directory"
-
+          ### Ratio of heap USE
+          
     # - name: flag
     #   run: |
     #     export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  # Set MaxRAM flag
@@ -67,17 +66,66 @@ jobs:
     #     chmod +x ./search_gc_info.sh
     #     ./search_gc_info.sh
 
-    - name: Run build with Cahce flag
-      run: |
-        export MAVEN_OPTS="-XX:ReservedCodeCacheSize=1024M"  # Set MaxRAM flag
-        mvn clean install  # Run Maven build
+          #### CACHE TEST
+          
+    # - name: Run build with Cahce flag
+    #   run: |
+    #     export MAVEN_OPTS="-XX:ReservedCodeCacheSize=1024M"  # Set MaxRAM flag
+    #     mvn clean install  # Run Maven build
             
-    # Check if the compilation was successful with 2GB RAM
-    - name: Check if build was successful with 2GB RAM
-      if: success()  
-      run: echo "The build with 2GB RAM was successful."
+    # # Check if the compilation was successful with 2GB RAM
+    # - name: Check if build was successful with 2GB RAM
+    #   if: success()  
+    #   run: echo "The build with 2GB RAM was successful."
 
-    # Check error
-    - name: Handle failure
+    # # Check error
+    # - name: Handle failure
+    #   if: failure()  
+    #   run: echo "Build with 2GB RAM failed."
+
+          ### 64 vs 32 bits
+    
+    # Primera ejecución con 1024M de tamaño de caché
+    - name: Run build with 1024M Cache flag
+      run: |
+        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=128M"
+        mvn clean install
+          
+    # Check if the first build was successful
+    - name: Check if build was successful with 128M Words
+      id: check_build_1
+      if: success()  
+      run: echo "The build with 128 Words was successful."
+
+    # Handling failure on first build
+    - name: Handle failure for 128 Words
       if: failure()  
-      run: echo "Build with 2GB RAM failed."
+      run: echo "Build with 128 Words failed."
+
+    # Second run with 64M Words (half)
+    - name: Run build with 64M Words flag
+      run: |
+        export MAVEN_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:MallocMaxTestWords=64M"
+        mvn clean install
+
+    # Check if the second build was successful
+    - name: Check if build was successful with 64M Words
+      id: check_build_2
+      if: success()  
+      run: echo "The build with 64M Words was successful."
+
+    # Handling failure on second build
+    - name: Handle failure for 64M Words
+      if: failure()  
+      run: echo "Build with 64M Words failed."
+
+    # Evaluate overall success
+    - name: Evaluate overall success
+      run: |
+        if [[ "${{ steps.check_build_1.outcome }}" == "success" ]] && [[ "${{ steps.check_build_2.outcome }}" == "success" ]]; then
+          echo "It is very likely that the software will run on both architectures."
+        elif [[ "${{ steps.check_build_1.outcome }}" == "failure" ]] && [[ "${{ steps.check_build_2.outcome }}" == "failure" ]]; then
+          echo "Both builds failed. Try to increase the number of words for 64-bit architecture"
+        else
+          echo "It is very likely that the software will only run on 64-bit architectures."
+        fi
