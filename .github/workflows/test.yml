@@ -52,17 +52,32 @@ jobs:
     #   if: failure()  
     #   run: echo "Build with 2GB RAM failed."
 
-    - name: Obtener directorio de trabajo
-      run: |
-        current_directory=$(pwd)
-        echo "El directorio de trabajo actual es: $current_directory"
+    # - name: Obtener directorio de trabajo
+    #   run: |
+    #     current_directory=$(pwd)
+    #     echo "El directorio de trabajo actual es: $current_directory"
 
-    - name: flag
+    # - name: flag
+    #   run: |
+    #     export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  # Set MaxRAM flag
+    #     mvn clean install  # Run Maven build
+
+    # - name: Ejecutar script de Bash para obtener GC Info
+    #   run: |
+    #     chmod +x ./search_gc_info.sh
+    #     ./search_gc_info.sh
+
+    - name: Run build with Cahce flag
       run: |
-        export MAVEN_OPTS="-Xlog:gc*:file=gc.log"  # Set MaxRAM flag
+        export MAVEN_OPTS="-XX:ReservedCodeCacheSize=3m"  # Set MaxRAM flag
         mvn clean install  # Run Maven build
-
-    - name: Ejecutar script de Bash para obtener GC Info
-      run: |
-        chmod +x ./search_gc_info.sh
-        ./search_gc_info.sh
+            
+        # Check if the compilation was successful with 2GB RAM
+        - name: Check if build was successful with 2GB RAM
+          if: success()  
+          run: echo "The build with 2GB RAM was successful."
+    
+        # Check error
+        - name: Handle failure
+          if: failure()  
+          run: echo "Build with 2GB RAM failed."
